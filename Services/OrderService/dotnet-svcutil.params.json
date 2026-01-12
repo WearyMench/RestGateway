@@ -1,0 +1,19 @@
+{
+  "providerId": "Microsoft.Tools.ServiceModel.Svcutil",
+  "version": "8.0.0",
+  "options": {
+    "inputs": [
+      "http://localhost:5000/OrderService.svc?wsdl"
+    ],
+    "namespaceMappings": [
+      "*, RestGateway.OrderService"
+    ],
+    "outputFile": "Reference.cs",
+    "references": [
+      "Microsoft.AspNetCore.OpenApi, {Microsoft.AspNetCore.OpenApi, 9.0.10}",
+      "Microsoft.OpenApi, {Microsoft.OpenApi, 1.6.17}"
+    ],
+    "targetFramework": "net9.0",
+    "typeReuseMode": "All"
+  }
+}

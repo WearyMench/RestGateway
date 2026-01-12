@@ -1,0 +1,50 @@
+version: '3.8'
+
+services:
+  restgateway:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: restgateway-prod
+    ports:
+      - "8080:8080"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_URLS=http://+:8080
+      - OrderService__BaseUrl=http://orderservice:5000/OrderService.svc
+    depends_on:
+      - orderservice
+    networks:
+      - gateway-network
+    restart: always
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 512M
+        reservations:
+          cpus: '0.5'
+          memory: 256M
+
+  orderservice:
+    image: mcr.microsoft.com/dotnet/aspnet:9.0
+    container_name: orderservice-prod
+    ports:
+      - "5000:5000"
+    environment:
+      - ASPNETCORE_URLS=http://+:5000
+    networks:
+      - gateway-network
+    restart: always
+    # Note: Replace with your actual OrderService image
+    # image: your-registry/orderservice:latest
+
+networks:
+  gateway-network:
+    driver: bridge
